@@ -24,23 +24,34 @@ class ProviderFactory:
     @staticmethod
     def get_provider():
 
-        if LLM_PROVIDER == "gemini":
+        try:
 
-            return GeminiProvider()
+            if LLM_PROVIDER == "gemini":
+                return GeminiProvider()
 
-        if LLM_PROVIDER == "openai":
+            if LLM_PROVIDER == "openai":
+                return OpenAIProvider()
 
-            return OpenAIProvider()
+            if LLM_PROVIDER == "anthropic":
+                return AnthropicProvider()
 
-        if LLM_PROVIDER == "anthropic":
+            if LLM_PROVIDER == "bedrock":
+                return BedrockProvider()
 
+        except Exception:
             return AnthropicProvider()
 
-        if LLM_PROVIDER == "bedrock":
-
-            return BedrockProvider()
+        supported = [
+            "gemini",
+            "openai",
+            "anthropic",
+            "bedrock"
+        ]
 
         raise ValueError(
-            f"Unsupported provider: "
-            f"{LLM_PROVIDER}"
+            (
+                f"Unsupported provider "
+                f"{LLM_PROVIDER}. "
+                f"Supported: {supported}"
+            )
         )
