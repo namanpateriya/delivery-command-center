@@ -48,15 +48,27 @@ class DeliveryMCPClient:
             )
         )
 
-        self.transport = (
-            stdio_client(
-                server_params
-            )
-        )
+        try:
 
-        read_stream, write_stream = (
-            await self.transport.__aenter__()
-        )
+            self.transport = (
+                stdio_client(
+                    server_params
+                )
+            )
+        
+            read_stream, write_stream = (
+                await self.transport.__aenter__()
+            )
+        
+        except Exception as e:
+        
+            logger.exception(
+                "Failed MCP startup"
+            )
+        
+            raise RuntimeError(
+                f"MCP startup failed: {e}"
+            )
 
         self.session = ClientSession(
             read_stream,
