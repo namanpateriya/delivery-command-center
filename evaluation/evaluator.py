@@ -4,6 +4,10 @@ from app.orchestrator.service import (
     DeliveryCommandCenter
 )
 
+from evaluation.optimizer import (
+    WorkflowOptimizer
+)
+
 
 class WorkflowEvaluator:
 
@@ -13,61 +17,77 @@ class WorkflowEvaluator:
             DeliveryCommandCenter()
         )
 
-        result = (
-            await service.execute(
-                (
-                    "Project delayed by "
-                    "3 weeks."
-                )
+        result = await service.execute(
+            (
+                "Project delayed by "
+                "3 weeks."
             )
         )
 
-        tests = []
+        optimizer = (
+            WorkflowOptimizer()
+        )
 
-        tests.append({
-            "test": "workflow_execution",
-            "passed": result is not None
-        })
-
-        tests.append({
-            "test": "summary_present",
-            "passed": (
-                "executive_summary"
-                in result
+        optimization = (
+            optimizer.optimize(
+                result
             )
-        })
+        )
 
-        tests.append({
-            "test": "delivery_output",
-            "passed": (
-                "delivery"
-                in result[
+        tests = [
+
+            {
+                "test":
+                "workflow_execution",
+
+                "passed":
+                result is not None
+            },
+
+            {
+                "test":
+                "executive_summary",
+
+                "passed":
+                (
                     "executive_summary"
-                ]
-            )
-        })
+                    in result
+                )
+            },
 
-        tests.append({
-            "test": "risk_output",
-            "passed": (
-                "risk"
-                in result[
-                    "executive_summary"
-                ]
-            )
-        })
+            {
+                "test":
+                "readiness_score",
 
-        tests.append({
-            "test": "communication_output",
-            "passed": (
-                "communication"
-                in result[
-                    "executive_summary"
-                ]
-            )
-        })
+                "passed":
+                (
+                    optimization[
+                        "readiness_score"
+                    ] >= 60
+                )
+            },
 
-        return tests
+            {
+                "test":
+                "governance_status",
+
+                "passed":
+                (
+                    optimization[
+                        "governance_status"
+                    ]
+                    != "High Risk"
+                )
+            }
+        ]
+
+        return {
+
+            "tests": tests,
+
+            "optimization":
+            optimization
+        }
 
 
 async def main():
@@ -80,13 +100,7 @@ async def main():
         await evaluator.evaluate()
     )
 
-    print(
-        "\n=== EVALUATION ===\n"
-    )
-
-    for result in results:
-
-        print(result)
+    print(results)
 
 
 if __name__ == "__main__":
