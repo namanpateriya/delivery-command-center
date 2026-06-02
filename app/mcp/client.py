@@ -5,6 +5,12 @@ from mcp.client.stdio import (
     StdioServerParameters
 )
 
+from app.utils.logger import (
+    get_logger
+)
+
+logger = get_logger(__name__)
+
 
 class DeliveryMCPClient:
 
@@ -27,6 +33,10 @@ class DeliveryMCPClient:
         return response
 
     async def connect(self):
+
+        logger.info(
+            "Connecting to MCP server"
+        )
 
         server_params = (
             StdioServerParameters(
@@ -55,16 +65,38 @@ class DeliveryMCPClient:
 
         await self.session.initialize()
 
-    async def list_resources(self):
+        logger.info(
+            "MCP initialized"
+        )
 
-        return await (
-            self.session.list_resources()
+    async def discover_resources(self):
+
+        resources = (
+            await self.session.list_resources()
+        )
+
+        return self._normalize(
+            resources
+        )
+
+    async def discover_tools(self):
+
+        tools = (
+            await self.session.list_tools()
+        )
+
+        return self._normalize(
+            tools
         )
 
     async def read_resource(
         self,
         uri: str
     ):
+
+        logger.info(
+            f"Reading resource {uri}"
+        )
 
         response = (
             await self.session.read_resource(
@@ -76,19 +108,17 @@ class DeliveryMCPClient:
             response
         )
 
-    async def list_tools(self):
-
-        return await (
-            self.session.list_tools()
-        )
-
     async def call_tool(
         self,
         tool_name: str,
-        arguments: dict | None = None
+        arguments=None
     ):
 
         arguments = arguments or {}
+
+        logger.info(
+            f"Calling tool {tool_name}"
+        )
 
         response = (
             await self.session.call_tool(
@@ -102,6 +132,10 @@ class DeliveryMCPClient:
         )
 
     async def close(self):
+
+        logger.info(
+            "Closing MCP session"
+        )
 
         if self.transport:
 
