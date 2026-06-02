@@ -19,3 +19,10 @@ PROJECT_RISKS = load_json_file(
 STAKEHOLDERS = load_json_file(
     STAKEHOLDER_DATA_FILE
 )
+
+PROJECT_MILESTONES = {
+    "requirements": "Completed",
+    "development": "Completed",
+    "testing": "In Progress",
+    "production_release": "Delayed"
+}
