@@ -16,6 +16,12 @@ from app.orchestrator.aggregator import (
     ResultAggregator
 )
 
+from app.utils.logger import (
+    get_logger
+)
+
+logger = get_logger(__name__)
+
 
 class DeliveryCommandCenter:
 
@@ -38,6 +44,13 @@ class DeliveryCommandCenter:
         user_query: str
     ):
 
+        logger.info(
+            (
+                "Processing query: "
+                f"{user_query}"
+            )
+        )
+
         plan = (
             self.planner.create_plan(
                 user_query
@@ -54,11 +67,11 @@ class DeliveryCommandCenter:
 
             tasks = []
 
-            for item in plan:
+            for task_name in plan:
 
                 agent = (
                     self.router.get_agent(
-                        item
+                        task_name
                     )
                 )
 
@@ -76,6 +89,7 @@ class DeliveryCommandCenter:
 
             return (
                 self.aggregator.aggregate(
+                    user_query,
                     plan,
                     results
                 )
