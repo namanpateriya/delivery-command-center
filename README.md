@@ -1,133 +1,115 @@
 # Delivery Command Center
 
-Delivery Command Center is an MCP-powered multi-agent system designed to assist Program Managers, Delivery Leaders, and Customer Success teams in analyzing project health, identifying risks, and preparing executive communications.
+Delivery Command Center is an MCP-powered AI system designed for Program Managers, Delivery Leaders, PMOs, and Customer Success teams.
 
-The repository demonstrates how multiple specialized agents can collaborate through a shared MCP ecosystem to produce structured executive-ready outputs.
+The repository demonstrates how multiple AI agents can collaborate to analyze delivery health, identify risks, generate executive communications, and provide governance-focused recommendations.
 
-Unlike traditional AI assistants that rely on hardcoded integrations, this project leverages the Model Context Protocol (MCP) to expose discoverable resources and tools that agents can dynamically access during workflow execution.
+Unlike traditional assistants, this project combines:
+
+- Multi-Agent Architecture
+- MCP (Model Context Protocol)
+- Multi-LLM Support
+- Workflow Orchestration
+- Executive Reporting
+- Evaluation & Optimization
 
 ---
 
 # Why This Repository?
 
-Program and Delivery Managers typically spend significant time collecting information from multiple systems before preparing status updates, risk assessments, and stakeholder communications.
+Program Managers spend significant effort collecting information from multiple sources before preparing:
 
-Common information sources include:
+- Executive Status Reports
+- Risk Reviews
+- Leadership Updates
+- Governance Reviews
+- Stakeholder Communications
 
-* Project status reports
-* Risk registers
-* Milestone trackers
-* Stakeholder directories
-* Executive dashboards
-
-This repository explores how MCP can act as a standardized integration layer while agents focus on specific business concerns such as delivery management, risk analysis, and communication.
+This repository demonstrates how MCP and AI agents can work together to automate portions of that workflow.
 
 ---
 
 # Key Features
 
-### MCP-Powered Architecture
+## MCP Integration
 
-Uses MCP resources and tools as the primary mechanism for information discovery and retrieval.
+Uses MCP resources and tools to access project information.
 
-### Multi-Agent Collaboration
+## Multi-Agent Collaboration
 
-Specialized agents independently analyze different aspects of project delivery.
+Specialized agents independently analyze:
 
-### Workflow Orchestration
+- Delivery Health
+- Project Risks
+- Stakeholder Communication
 
-Planner, Router, and Aggregator components coordinate execution across agents.
+## Multi-LLM Support
 
-### Executive Reporting
+Provider abstraction supports:
 
-Generates structured outputs that combine delivery insights, risk analysis, and communication recommendations.
+- Gemini
+- OpenAI
+- Anthropic (Stub)
+- AWS Bedrock (Stub)
 
-### Evaluation & Optimization
+Provider selection is controlled through environment variables.
 
-Built-in evaluation framework assesses workflow readiness and governance coverage.
+## Workflow Orchestration
 
----
+Planner, Router, and Aggregator coordinate execution across agents.
 
-# Core Components
+## Executive Reporting
 
-## MCP Layer
+Produces structured leadership-ready outputs.
 
-Provides discoverable project information through MCP resources and tools.
+## Evaluation & Optimization
 
-### Resources
+Built-in evaluation framework assesses:
 
-```text
-project://status
-project://milestones
-risk://open
-stakeholder://contacts
-```
+- Governance readiness
+- Workflow completeness
+- Agent participation
+- Communication coverage
 
-### Tools
+## MCP Fallback Mode
 
-```text
-generate_project_summary
-assess_project_risk
-draft_status_update
-server_health
-```
-
----
-
-## Agents
-
-### Delivery Agent
-
-Responsible for analyzing project status and delivery health.
-
-### Risk Agent
-
-Responsible for reviewing risks and producing risk assessments.
-
-### Communication Agent
-
-Responsible for preparing stakeholder-facing communications.
-
----
-
-## Orchestration Layer
-
-### Planner
-
-Determines which tasks need to be executed.
-
-### Router
-
-Assigns tasks to the appropriate agents.
-
-### Aggregator
-
-Combines outputs into a consolidated executive summary.
+Application can operate without MCP by loading data directly from JSON files.
 
 ---
 
 # Architecture Overview
 
-```text
 User Query
       ↓
+
 Workflow Planner
       ↓
+
 Agent Router
       ↓
 
- ┌─────────────────┐
- │ Delivery Agent  │
- └─────────────────┘
+┌─────────────────┐
+│ Delivery Agent  │
+└─────────────────┘
 
- ┌─────────────────┐
- │ Risk Agent      │
- └─────────────────┘
+┌─────────────────┐
+│ Risk Agent      │
+└─────────────────┘
 
- ┌─────────────────┐
- │ Communication   │
- │ Agent           │
- └─────────────────┘
+┌─────────────────┐
+│ Communication   │
+│ Agent           │
+└─────────────────┘
+
+      ↓
+
+Reasoning Engine
+      ↓
+
+Provider Factory
+      ↓
+
+Gemini / OpenAI
 
       ↓
 
@@ -136,20 +118,66 @@ MCP Client
 
 MCP Server
 
- ├── Resources
- └── Tools
+OR
+
+JSON Fallback
 
       ↓
 
-Result Aggregator
+Aggregator
       ↓
 
-Executive Summary
+Executive Report
+      ↓
+
+Optimizer
+      ↓
+
+Evaluator
+
+---
+
+# Supported Providers
+
+## Gemini
+
+```env
+LLM_PROVIDER=gemini
 ```
+
+## OpenAI
+
+```env
+LLM_PROVIDER=openai
+```
+
+## Anthropic
+
+```env
+LLM_PROVIDER=anthropic
+```
+
+(Currently Stub)
+
+## AWS Bedrock
+
+```env
+LLM_PROVIDER=bedrock
+```
+
+(Currently Stub)
 
 ---
 
 # Running the Application
+
+## Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+---
 
 ## API
 
@@ -157,12 +185,10 @@ Executive Summary
 uvicorn app.main:app --reload
 ```
 
-Example request:
+Open:
 
-```json
-{
-  "query": "Project delayed by 3 weeks. Prepare leadership update."
-}
+```text
+http://localhost:8000/docs
 ```
 
 ---
@@ -171,8 +197,38 @@ Example request:
 
 ```bash
 python -m app.cli \
---query "Project delayed by 3 weeks"
+--query "Project delayed by 3 weeks. Prepare leadership update."
 ```
+
+---
+
+# MCP Mode
+
+```env
+ENABLE_MCP=true
+```
+
+Uses:
+
+- MCP Resources
+- MCP Tools
+- MCP Discovery
+
+---
+
+# Fallback Mode
+
+```env
+ENABLE_MCP=false
+```
+
+Uses:
+
+- sample_project.json
+- sample_risks.json
+- sample_stakeholders.json
+
+No MCP server required.
 
 ---
 
@@ -184,13 +240,13 @@ Run:
 python -m evaluation.evaluator
 ```
 
-The evaluation framework validates:
+The framework evaluates:
 
-* Workflow execution
-* Agent participation
-* Coverage completeness
-* Governance readiness
-* Executive reporting quality
+- Delivery Analysis
+- Risk Analysis
+- Stakeholder Communication
+- Governance Readiness
+- Agent Participation
 
 ---
 
@@ -198,12 +254,12 @@ The evaluation framework validates:
 
 Potential use cases include:
 
-* Program Management
-* PMO Operations
-* Customer Success
-* Delivery Governance
-* Transformation Offices
-* Executive Reporting
+- Program Management
+- PMO Operations
+- Customer Success
+- Transformation Offices
+- Delivery Governance
+- Executive Reporting
 
 ---
 
@@ -211,28 +267,29 @@ Potential use cases include:
 
 This repository demonstrates:
 
-* MCP integration patterns
-* Multi-agent collaboration
-* Workflow orchestration
-* Resource discovery
-* Tool execution
-* Governance-focused evaluation
+- MCP Integration
+- Multi-Agent Systems
+- Multi-LLM Architecture
+- Provider Abstraction
+- Workflow Orchestration
+- Governance-focused Evaluation
 
 ---
 
 # Future Enhancements
 
-Potential next steps include:
+Potential extensions include:
 
-* Gemini-powered agents
-* Jira integrations
-* Confluence integrations
-* Long-term memory
-* Retrieval-Augmented Generation (RAG)
-* Multi-MCP server architectures
+- Jira Integration
+- Confluence Integration
+- RAG Support
+- Long-Term Memory
+- Multi-MCP Server Support
+- Anthropic Support
+- AWS Bedrock Support
 
 ---
 
 # Summary
 
-Delivery Command Center demonstrates how MCP, agents, and workflow orchestration can be combined to create a structured decision-support system for enterprise delivery and program management scenarios.
+Delivery Command Center demonstrates how MCP, AI agents, workflow orchestration, and modern LLM architectures can be combined to build enterprise-grade delivery intelligence systems.
