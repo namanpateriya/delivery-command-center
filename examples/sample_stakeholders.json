@@ -1,0 +1,17 @@
+[
+  {
+    "name": "Sarah Johnson",
+    "role": "Program Sponsor",
+    "email": "sarah@example.com"
+  },
+  {
+    "name": "David Smith",
+    "role": "Engineering Director",
+    "email": "david@example.com"
+  },
+  {
+    "name": "Emily Brown",
+    "role": "Product Director",
+    "email": "emily@example.com"
+  }
+]
