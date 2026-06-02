@@ -1,5 +1,3 @@
-import json
-
 from app.mcp.client import (
     DeliveryMCPClient
 )
@@ -14,15 +12,36 @@ class DeliveryAgent:
         client: DeliveryMCPClient
     ):
 
-        status = await client.read_resource(
-            "project://status"
-        )
+        try:
 
-        summary = await client.call_tool(
-            "generate_project_summary"
-        )
+            status = (
+                await client.read_resource(
+                    "project://status"
+                )
+            )
 
-        return {
-            "project_status": status,
-            "project_summary": summary
-        }
+            summary = (
+                await client.call_tool(
+                    "generate_project_summary"
+                )
+            )
+
+            return {
+
+                "success": True,
+
+                "project_status":
+                status,
+
+                "project_summary":
+                summary
+            }
+
+        except Exception as e:
+
+            return {
+
+                "success": False,
+
+                "error": str(e)
+            }
