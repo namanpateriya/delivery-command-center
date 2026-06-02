@@ -12,17 +12,36 @@ class CommunicationAgent:
         client: DeliveryMCPClient
     ):
 
-        stakeholders = (
-            await client.read_resource(
-                "stakeholder://contacts"
+        try:
+
+            stakeholders = (
+                await client.read_resource(
+                    "stakeholder://contacts"
+                )
             )
-        )
 
-        draft = await client.call_tool(
-            "draft_status_update"
-        )
+            draft = (
+                await client.call_tool(
+                    "draft_status_update"
+                )
+            )
 
-        return {
-            "stakeholders": stakeholders,
-            "communication": draft
-        }
+            return {
+
+                "success": True,
+
+                "stakeholders":
+                stakeholders,
+
+                "communication":
+                draft
+            }
+
+        except Exception as e:
+
+            return {
+
+                "success": False,
+
+                "error": str(e)
+            }
