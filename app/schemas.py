@@ -1,30 +1,46 @@
 from typing import List
+
 from pydantic import BaseModel
 
 
-class ProjectStatus(BaseModel):
+class ProjectStatus(
+    BaseModel
+):
 
     project_name: str
+
     health: str
+
     timeline_status: str
+
     summary: str
 
 
-class Risk(BaseModel):
+class Risk(
+    BaseModel
+):
 
     risk_id: str
+
     description: str
+
     severity: str
 
 
-class Stakeholder(BaseModel):
+class Stakeholder(
+    BaseModel
+):
 
     name: str
+
     role: str
+
     email: str
 
 
-class ExecutiveReport(BaseModel):
+class ExecutiveReport(
+    BaseModel
+):
 
     summary: str
 
@@ -35,21 +51,33 @@ class ExecutiveReport(BaseModel):
     communication_draft: str
 
 
-class AgentResponse(BaseModel):
+class AgentResponse(
+    BaseModel
+):
 
     agent_name: str
 
     output: dict
 
 
-class WorkflowResponse(BaseModel):
+class WorkflowResponse(
+    BaseModel
+):
 
     status: str
 
     report: ExecutiveReport
+
 
 class QueryRequest(
     BaseModel
 ):
 
     query: str
+
+
+class QueryResponse(
+    BaseModel
+):
+
+    result: dict
