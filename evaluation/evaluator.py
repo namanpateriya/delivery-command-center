@@ -17,7 +17,7 @@ class WorkflowEvaluator:
             DeliveryCommandCenter()
         )
 
-        result = (
+        report = (
             await service.execute(
                 (
                     "Project delayed by "
@@ -31,9 +31,9 @@ class WorkflowEvaluator:
             WorkflowOptimizer()
         )
 
-        optimization = (
+        metrics = (
             optimizer.optimize(
-                result
+                report
             )
         )
 
@@ -41,21 +41,49 @@ class WorkflowEvaluator:
 
             {
                 "test":
-                "workflow_execution",
+                "executive_summary",
 
                 "passed":
-                result is not None
+                bool(
+                    report.get(
+                        "executive_summary"
+                    )
+                )
             },
 
             {
                 "test":
-                "coverage_score",
+                "delivery_analysis",
 
                 "passed":
-                (
-                    optimization[
-                        "coverage_score"
-                    ] >= 75
+                bool(
+                    report.get(
+                        "delivery_analysis"
+                    )
+                )
+            },
+
+            {
+                "test":
+                "risk_analysis",
+
+                "passed":
+                bool(
+                    report.get(
+                        "risk_analysis"
+                    )
+                )
+            },
+
+            {
+                "test":
+                "stakeholder_update",
+
+                "passed":
+                bool(
+                    report.get(
+                        "stakeholder_update"
+                    )
                 )
             },
 
@@ -65,44 +93,40 @@ class WorkflowEvaluator:
 
                 "passed":
                 (
-                    optimization[
+                    metrics[
                         "governance_score"
-                    ] >= 75
-                )
-            },
-
-            {
-                "test":
-                "readiness_score",
-
-                "passed":
-                (
-                    optimization[
-                        "readiness_score"
-                    ] >= 75
-                )
-            },
-
-            {
-                "test":
-                "governance_status",
-
-                "passed":
-                (
-                    optimization[
-                        "governance_status"
-                    ]
-                    == "Healthy"
+                    ] >= 80
                 )
             }
         ]
 
+        passed = len(
+            [
+                t
+                for t in tests
+                if t["passed"]
+            ]
+        )
+
+        total = len(
+            tests
+        )
+
         return {
 
-            "tests": tests,
+            "score":
+            round(
+                (
+                    passed / total
+                ) * 100,
+                2
+            ),
 
-            "optimization":
-            optimization
+            "tests":
+            tests,
+
+            "metrics":
+            metrics
         }
 
 
@@ -112,7 +136,7 @@ async def main():
         WorkflowEvaluator()
     )
 
-    results = (
+    result = (
         await evaluator.evaluate()
     )
 
@@ -120,7 +144,7 @@ async def main():
         "\n=== EVALUATION ===\n"
     )
 
-    print(results)
+    print(result)
 
 
 if __name__ == "__main__":
