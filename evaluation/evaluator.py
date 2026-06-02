@@ -17,10 +17,13 @@ class WorkflowEvaluator:
             DeliveryCommandCenter()
         )
 
-        result = await service.execute(
-            (
-                "Project delayed by "
-                "3 weeks."
+        result = (
+            await service.execute(
+                (
+                    "Project delayed by "
+                    "3 weeks. Prepare "
+                    "leadership update."
+                )
             )
         )
 
@@ -46,12 +49,25 @@ class WorkflowEvaluator:
 
             {
                 "test":
-                "executive_summary",
+                "coverage_score",
 
                 "passed":
                 (
-                    "executive_summary"
-                    in result
+                    optimization[
+                        "coverage_score"
+                    ] >= 75
+                )
+            },
+
+            {
+                "test":
+                "governance_score",
+
+                "passed":
+                (
+                    optimization[
+                        "governance_score"
+                    ] >= 75
                 )
             },
 
@@ -63,7 +79,7 @@ class WorkflowEvaluator:
                 (
                     optimization[
                         "readiness_score"
-                    ] >= 60
+                    ] >= 75
                 )
             },
 
@@ -76,7 +92,7 @@ class WorkflowEvaluator:
                     optimization[
                         "governance_status"
                     ]
-                    != "High Risk"
+                    == "Healthy"
                 )
             }
         ]
@@ -98,6 +114,10 @@ async def main():
 
     results = (
         await evaluator.evaluate()
+    )
+
+    print(
+        "\n=== EVALUATION ===\n"
     )
 
     print(results)
