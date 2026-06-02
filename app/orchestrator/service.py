@@ -44,53 +44,40 @@ class DeliveryCommandCenter:
             )
         )
 
-        client = DeliveryMCPClient()
+        client = (
+            DeliveryMCPClient()
+        )
 
         await client.connect()
 
         try:
 
-            delivery_agent = (
-                self.router.get_agent(
-                    "delivery"
-                )
-            )
+            tasks = []
 
-            risk_agent = (
-                self.router.get_agent(
-                    "risk"
-                )
-            )
+            for item in plan:
 
-            communication_agent = (
-                self.router.get_agent(
-                    "communication"
+                agent = (
+                    self.router.get_agent(
+                        item
+                    )
                 )
-            )
 
-            delivery_result = (
-                await delivery_agent.execute(
-                    client
+                tasks.append(
+                    agent.execute(
+                        client
+                    )
                 )
-            )
 
-            risk_result = (
-                await risk_agent.execute(
-                    client
-                )
-            )
-
-            communication_result = (
-                await communication_agent.execute(
-                    client
+            results = (
+                await asyncio.gather(
+                    *tasks
                 )
             )
 
             return (
                 self.aggregator.aggregate(
-                    delivery_result,
-                    risk_result,
-                    communication_result
+                    plan,
+                    results
                 )
             )
 
