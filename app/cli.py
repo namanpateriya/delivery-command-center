@@ -1,5 +1,6 @@
 import argparse
 import asyncio
+import json
 
 from app.orchestrator.service import (
     DeliveryCommandCenter
@@ -22,7 +23,13 @@ async def execute_query(
         "\n=== DELIVERY COMMAND CENTER ===\n"
     )
 
-    print(result)
+    print(
+        json.dumps(
+            result,
+            indent=2,
+            default=str
+        )
+    )
 
 
 def main():
