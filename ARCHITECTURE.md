@@ -1,251 +1,222 @@
-# Delivery Command Center Architecture
+# Architecture
 
 ## Purpose
 
-The purpose of this repository is to demonstrate how MCP can be integrated into a multi-agent architecture to support delivery and program management workflows.
+Delivery Command Center demonstrates how MCP can be combined with AI agents and modern LLM providers to support enterprise delivery management workflows.
 
-The system is intentionally designed to separate information access, business reasoning, and workflow orchestration into independent components.
+The architecture separates:
+
+- Information Access
+- Business Reasoning
+- Workflow Execution
+- Evaluation
+
+into independent layers.
 
 ---
 
-# Design Goals
+# Design Principles
 
-The architecture is guided by four principles.
+## Separation of Concerns
 
-### Separation of Concerns
+Each layer has a dedicated responsibility.
 
-Each layer has a single responsibility.
+## Provider Independence
 
-### Discoverability
+Agents should not be coupled to a specific LLM.
 
-Agents should discover capabilities through MCP rather than hardcoded integrations.
+## MCP First
 
-### Modularity
+Information should be accessible through MCP resources and tools.
 
-Components should be independently extensible.
+## Reliability
 
-### Deterministic Execution
-
-The initial implementation avoids LLM dependencies to ensure predictable behavior.
+Fallback mode ensures the system remains operational when MCP is unavailable.
 
 ---
 
 # High-Level Architecture
 
-```text
 User
  ↓
 Planner
  ↓
 Router
  ↓
-
 Agents
  ↓
-
-MCP Client
+Reasoning Engine
  ↓
-
-MCP Server
+Provider Factory
  ↓
-
-Resources + Tools
+LLM Provider
  ↓
-
+MCP / JSON
+ ↓
 Aggregator
  ↓
-
-Executive Output
-```
-
----
-
-# MCP Layer
-
-The MCP layer acts as the information access boundary.
-
-It exposes resources and tools that can be discovered by clients.
-
----
-
-## Resources
-
-Resources provide read-only information.
-
-Examples:
-
-```text
-project://status
-project://milestones
-risk://open
-stakeholder://contacts
-```
-
----
-
-## Tools
-
-Tools provide executable functionality.
-
-Examples:
-
-```text
-generate_project_summary
-assess_project_risk
-draft_status_update
-```
+Optimizer
+ ↓
+Evaluator
 
 ---
 
 # Agent Layer
 
-Each agent focuses on a specific business concern.
-
----
-
 ## Delivery Agent
 
-Consumes:
+Responsible for:
 
-```text
-project://status
-generate_project_summary
-```
-
-Produces:
-
-```text
-Delivery insights
-```
+- Project Health
+- Timeline Assessment
+- Delivery Recommendations
 
 ---
 
 ## Risk Agent
 
-Consumes:
+Responsible for:
 
-```text
-risk://open
-assess_project_risk
-```
-
-Produces:
-
-```text
-Risk analysis
-```
+- Risk Assessment
+- Risk Prioritization
+- Mitigation Recommendations
 
 ---
 
 ## Communication Agent
 
-Consumes:
+Responsible for:
+
+- Leadership Updates
+- Executive Summaries
+- Stakeholder Communication
+
+---
+
+# Reasoning Layer
+
+The Reasoning Engine converts structured project data into AI prompts.
+
+Responsibilities:
+
+- Prompt Construction
+- Context Packaging
+- Provider Invocation
+
+---
+
+# Provider Layer
+
+Provider Factory dynamically selects the configured model.
+
+Supported providers:
+
+- Gemini
+- OpenAI
+- Anthropic (Stub)
+- AWS Bedrock (Stub)
+
+---
+
+# MCP Layer
+
+Provides standardized access to:
+
+## Resources
 
 ```text
+project://status
+risk://open
 stakeholder://contacts
+```
+
+## Tools
+
+```text
+generate_project_summary
+assess_project_risk
 draft_status_update
 ```
 
-Produces:
+---
 
-```text
-Executive communication drafts
+# Fallback Mode
+
+If MCP is unavailable:
+
+```env
+ENABLE_MCP=false
 ```
 
+data is loaded directly from JSON files.
+
+Benefits:
+
+- Simplified demos
+- Improved reliability
+- Reduced setup complexity
+
 ---
 
-# Workflow Orchestration
-
-The orchestration layer coordinates execution.
-
----
+# Orchestration Layer
 
 ## Planner
 
-Determines which tasks should be executed.
-
----
+Determines which tasks are required.
 
 ## Router
 
 Maps tasks to agents.
 
----
-
 ## Aggregator
 
-Combines outputs into a unified response.
+Combines outputs into a single executive report.
 
 ---
 
 # Evaluation Layer
 
-The evaluation framework assesses:
+## Optimizer
 
-* workflow completeness
-* governance readiness
-* delivery coverage
-* risk coverage
-* communication coverage
+Produces:
 
----
+- Delivery Score
+- Risk Score
+- Communication Score
+- Governance Score
+- Readiness Score
 
-# Design Decisions
+## Evaluator
 
-## Single MCP Server
-
-The repository uses a single MCP server exposing multiple domains.
-
-Benefits:
-
-* simpler deployment
-* easier learning experience
-* reduced operational complexity
-
----
-
-## Deterministic Agents
-
-Agents use MCP resources and tools directly rather than LLM-generated reasoning.
-
-Benefits:
-
-* repeatability
-* easier testing
-* lower operational cost
+Validates workflow execution and report completeness.
 
 ---
 
 # Extension Points
 
-Future enhancements may include:
+Potential future additions:
 
-### Additional Resources
+## Integrations
 
-```text
-project://budget
-project://dependencies
-project://roadmap
-```
+- Jira
+- Confluence
+- ServiceNow
 
-### Additional Tools
+## AI Capabilities
 
-```text
-forecast_delivery
-analyze_dependencies
-generate_risk_report
-```
+- RAG
+- Memory
+- Tool Calling
+- Multi-MCP
 
-### Additional Agents
+## Providers
 
-```text
-Budget Agent
-Dependency Agent
-Portfolio Agent
-```
+- Anthropic
+- Bedrock
+- Azure OpenAI
 
 ---
 
 # Conclusion
 
-The architecture demonstrates how MCP can serve as a standardized integration layer while agents and orchestration components focus on business workflows and decision support.
+The architecture demonstrates a practical enterprise pattern combining MCP, AI agents, workflow orchestration, and provider abstraction to support delivery management use cases.
