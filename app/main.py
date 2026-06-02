@@ -11,6 +11,9 @@ from app.orchestrator.service import (
 
 app = FastAPI(
     title="Delivery Command Center",
+    description=(
+        "MCP-powered AI Delivery Copilot"
+    ),
     version="1.0.0"
 )
 
@@ -34,6 +37,8 @@ async def analyze(
         DeliveryCommandCenter()
     )
 
-    return await service.execute(
+    result = await service.execute(
         request.query
     )
+
+    return result
