@@ -1,3 +1,11 @@
+from app.config import (
+    RISK_DATA_FILE
+)
+
+from app.utils.json_loader import (
+    load_json_file
+)
+
 from app.llm.reasoning_engine import (
     ReasoningEngine
 )
@@ -20,17 +28,36 @@ class RiskAgent:
 
         try:
 
-            risks = (
-                await client.read_resource(
-                    "risk://open"
-                )
+            logger.info(
+                "Starting risk analysis"
             )
 
-            assessment = (
-                await client.call_tool(
-                    "assess_project_risk"
+            if client:
+
+                risks = (
+                    await client.read_resource(
+                        "risk://open"
+                    )
                 )
-            )
+
+                assessment = (
+                    await client.call_tool(
+                        "assess_project_risk"
+                    )
+                )
+
+            else:
+
+                risks = (
+                    load_json_file(
+                        RISK_DATA_FILE
+                    )
+                )
+
+                assessment = {
+                    "fallback": True,
+                    "source": "json"
+                }
 
             engine = (
                 ReasoningEngine()
@@ -53,7 +80,10 @@ class RiskAgent:
                 "success": True,
 
                 "analysis":
-                analysis
+                analysis,
+
+                "risks":
+                risks
             }
 
         except Exception as e:
