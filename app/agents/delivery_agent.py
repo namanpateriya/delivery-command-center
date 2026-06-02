@@ -1,6 +1,12 @@
-from app.mcp.client import (
-    DeliveryMCPClient
+from app.llm.reasoning_engine import (
+    ReasoningEngine
 )
+
+from app.utils.logger import (
+    get_logger
+)
+
+logger = get_logger(__name__)
 
 
 class DeliveryAgent:
@@ -9,10 +15,18 @@ class DeliveryAgent:
 
     async def execute(
         self,
-        client: DeliveryMCPClient
+        client
     ):
 
         try:
+
+            logger.info(
+                "Starting delivery analysis"
+            )
+
+            resources = (
+                await client.discover_resources()
+            )
 
             status = (
                 await client.read_resource(
@@ -26,18 +40,41 @@ class DeliveryAgent:
                 )
             )
 
+            engine = (
+                ReasoningEngine()
+            )
+
+            analysis = (
+                await engine.analyze_delivery(
+                    {
+                        "resources":
+                        resources,
+
+                        "status":
+                        status,
+
+                        "summary":
+                        summary
+                    }
+                )
+            )
+
             return {
 
                 "success": True,
 
-                "project_status":
-                status,
+                "analysis":
+                analysis,
 
-                "project_summary":
-                summary
+                "project_status":
+                status
             }
 
         except Exception as e:
+
+            logger.exception(
+                "Delivery agent failed"
+            )
 
             return {
 
