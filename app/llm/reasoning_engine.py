@@ -30,10 +30,13 @@ class ReasoningEngine:
             )
         )
 
-        return await (
-            self.provider.generate(
-                prompt
-            )
+        response = await self.provider.generate(
+            prompt
+        )
+        
+        return response.get(
+            "content",
+            ""
         )
 
     async def analyze_risk(
@@ -48,10 +51,13 @@ class ReasoningEngine:
             )
         )
 
-        return await (
-            self.provider.generate(
-                prompt
-            )
+        response = await self.provider.generate(
+            prompt
+        )
+        
+        return response.get(
+            "content",
+            ""
         )
 
     async def generate_communication(
@@ -66,8 +72,11 @@ class ReasoningEngine:
             )
         )
 
-        return await (
-            self.provider.generate(
-                prompt
-            )
+        response = await self.provider.generate(
+            prompt
+        )
+        
+        return response.get(
+            "content",
+            ""
         )
