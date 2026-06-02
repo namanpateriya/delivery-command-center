@@ -1,70 +1,93 @@
-from app.llm.reasoning_engine import (
-    ReasoningEngine
-)
-
-from app.utils.logger import (
-    get_logger
-)
-
-logger = get_logger(__name__)
+from datetime import datetime, UTC
 
 
-class CommunicationAgent:
+class ResultAggregator:
 
-    name = "CommunicationAgent"
-
-    async def execute(
+    def aggregate(
         self,
-        client
+        query: str,
+        plan: list[str],
+        results: list[dict]
     ):
 
-        try:
+        report = {
+            "generated_at": datetime.now(
+                UTC
+            ).isoformat(),
+            "query": query,
+            "executive_summary": "",
+            "delivery_analysis": "",
+            "risk_analysis": "",
+            "stakeholder_update": "",
+            "recommended_actions": []
+        }
 
-            stakeholders = (
-                await client.read_resource(
-                    "stakeholder://contacts"
+        for task, result in zip(
+            plan,
+            results
+        ):
+
+            if not result.get(
+                "success",
+                False
+            ):
+                continue
+
+            if task == "delivery":
+
+                report[
+                    "delivery_analysis"
+                ] = result.get(
+                    "analysis",
+                    ""
                 )
-            )
 
-            draft = (
-                await client.call_tool(
-                    "draft_status_update"
+            elif task == "risk":
+
+                report[
+                    "risk_analysis"
+                ] = result.get(
+                    "analysis",
+                    ""
                 )
-            )
 
-            engine = (
-                ReasoningEngine()
-            )
-
-            analysis = (
-                await engine.generate_communication(
-                    {
-                        "stakeholders":
-                        stakeholders,
-
-                        "draft":
-                        draft
-                    }
+                report[
+                    "recommended_actions"
+                ].append(
+                    (
+                        "Review critical risks "
+                        "and mitigation plans."
+                    )
                 )
+
+            elif task == "communication":
+
+                report[
+                    "stakeholder_update"
+                ] = result.get(
+                    "analysis",
+                    ""
+                )
+
+        summary = []
+
+        if report["delivery_analysis"]:
+            summary.append(
+                "Delivery assessment completed."
             )
 
-            return {
-
-                "success": True,
-
-                "analysis":
-                analysis
-            }
-
-        except Exception as e:
-
-            logger.exception(
-                "Communication agent failed"
+        if report["risk_analysis"]:
+            summary.append(
+                "Risk review completed."
             )
 
-            return {
+        if report["stakeholder_update"]:
+            summary.append(
+                "Leadership communication prepared."
+            )
 
-                "success": False,
+        report[
+            "executive_summary"
+        ] = " ".join(summary)
 
-                "error": str(e)
-            }
+        return report
