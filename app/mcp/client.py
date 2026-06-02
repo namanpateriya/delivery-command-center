@@ -13,6 +13,19 @@ class DeliveryMCPClient:
         self.session = None
         self.transport = None
 
+    def _normalize(
+        self,
+        response
+    ):
+
+        if hasattr(
+            response,
+            "content"
+        ):
+            return response.content
+
+        return response
+
     async def connect(self):
 
         server_params = (
@@ -53,8 +66,14 @@ class DeliveryMCPClient:
         uri: str
     ):
 
-        return await (
-            self.session.read_resource(uri)
+        response = (
+            await self.session.read_resource(
+                uri
+            )
+        )
+
+        return self._normalize(
+            response
         )
 
     async def list_tools(self):
@@ -71,9 +90,15 @@ class DeliveryMCPClient:
 
         arguments = arguments or {}
 
-        return await self.session.call_tool(
-            tool_name,
-            arguments
+        response = (
+            await self.session.call_tool(
+                tool_name,
+                arguments
+            )
+        )
+
+        return self._normalize(
+            response
         )
 
     async def close(self):
