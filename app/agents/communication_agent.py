@@ -1,3 +1,11 @@
+from app.config import (
+    STAKEHOLDER_DATA_FILE
+)
+
+from app.utils.json_loader import (
+    load_json_file
+)
+
 from app.llm.reasoning_engine import (
     ReasoningEngine
 )
@@ -20,17 +28,39 @@ class CommunicationAgent:
 
         try:
 
-            stakeholders = (
-                await client.read_resource(
-                    "stakeholder://contacts"
+            logger.info(
+                (
+                    "Starting stakeholder "
+                    "communication analysis"
                 )
             )
 
-            draft = (
-                await client.call_tool(
-                    "draft_status_update"
+            if client:
+
+                stakeholders = (
+                    await client.read_resource(
+                        "stakeholder://contacts"
+                    )
                 )
-            )
+
+                draft = (
+                    await client.call_tool(
+                        "draft_status_update"
+                    )
+                )
+
+            else:
+
+                stakeholders = (
+                    load_json_file(
+                        STAKEHOLDER_DATA_FILE
+                    )
+                )
+
+                draft = {
+                    "fallback": True,
+                    "source": "json"
+                }
 
             engine = (
                 ReasoningEngine()
@@ -53,13 +83,19 @@ class CommunicationAgent:
                 "success": True,
 
                 "analysis":
-                analysis
+                analysis,
+
+                "stakeholders":
+                stakeholders
             }
 
         except Exception as e:
 
             logger.exception(
-                "Communication agent failed"
+                (
+                    "Communication agent "
+                    "failed"
+                )
             )
 
             return {
