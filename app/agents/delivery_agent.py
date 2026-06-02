@@ -1,3 +1,11 @@
+from app.config import (
+    PROJECT_DATA_FILE
+)
+
+from app.utils.json_loader import (
+    load_json_file
+)
+
 from app.llm.reasoning_engine import (
     ReasoningEngine
 )
@@ -24,21 +32,35 @@ class DeliveryAgent:
                 "Starting delivery analysis"
             )
 
-            resources = (
-                await client.discover_resources()
-            )
+            if client:
 
-            status = (
-                await client.read_resource(
-                    "project://status"
+                resources = (
+                    await client.discover_resources()
                 )
-            )
 
-            summary = (
-                await client.call_tool(
-                    "generate_project_summary"
+                status = (
+                    await client.read_resource(
+                        "project://status"
+                    )
                 )
-            )
+
+                summary = (
+                    await client.call_tool(
+                        "generate_project_summary"
+                    )
+                )
+
+            else:
+
+                resources = []
+
+                status = (
+                    load_json_file(
+                        PROJECT_DATA_FILE
+                    )
+                )
+
+                summary = status
 
             engine = (
                 ReasoningEngine()
