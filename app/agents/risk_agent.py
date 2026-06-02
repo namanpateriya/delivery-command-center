@@ -1,6 +1,12 @@
-from app.mcp.client import (
-    DeliveryMCPClient
+from app.llm.reasoning_engine import (
+    ReasoningEngine
 )
+
+from app.utils.logger import (
+    get_logger
+)
+
+logger = get_logger(__name__)
 
 
 class RiskAgent:
@@ -9,7 +15,7 @@ class RiskAgent:
 
     async def execute(
         self,
-        client: DeliveryMCPClient
+        client
     ):
 
         try:
@@ -26,17 +32,35 @@ class RiskAgent:
                 )
             )
 
+            engine = (
+                ReasoningEngine()
+            )
+
+            analysis = (
+                await engine.analyze_risk(
+                    {
+                        "risks":
+                        risks,
+
+                        "assessment":
+                        assessment
+                    }
+                )
+            )
+
             return {
 
                 "success": True,
 
-                "risks": risks,
-
-                "risk_assessment":
-                assessment
+                "analysis":
+                analysis
             }
 
         except Exception as e:
+
+            logger.exception(
+                "Risk agent failed"
+            )
 
             return {
 
