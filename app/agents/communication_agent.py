@@ -1,6 +1,12 @@
-from app.mcp.client import (
-    DeliveryMCPClient
+from app.llm.reasoning_engine import (
+    ReasoningEngine
 )
+
+from app.utils.logger import (
+    get_logger
+)
+
+logger = get_logger(__name__)
 
 
 class CommunicationAgent:
@@ -9,7 +15,7 @@ class CommunicationAgent:
 
     async def execute(
         self,
-        client: DeliveryMCPClient
+        client
     ):
 
         try:
@@ -26,18 +32,35 @@ class CommunicationAgent:
                 )
             )
 
+            engine = (
+                ReasoningEngine()
+            )
+
+            analysis = (
+                await engine.generate_communication(
+                    {
+                        "stakeholders":
+                        stakeholders,
+
+                        "draft":
+                        draft
+                    }
+                )
+            )
+
             return {
 
                 "success": True,
 
-                "stakeholders":
-                stakeholders,
-
-                "communication":
-                draft
+                "analysis":
+                analysis
             }
 
         except Exception as e:
+
+            logger.exception(
+                "Communication agent failed"
+            )
 
             return {
 
