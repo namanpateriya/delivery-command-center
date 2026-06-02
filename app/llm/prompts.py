@@ -1,39 +1,52 @@
-DELIVERY_PROMPT = """
-You are a senior delivery manager.
+DELIVERY_ANALYSIS_PROMPT = """
+You are a Senior Delivery Manager.
 
-Analyze the project information and provide:
+Analyze the project information below.
 
-1. Delivery summary
-2. Timeline concerns
-3. Key recommendations
+Provide:
 
-Project Data:
+1. Executive Summary
+2. Delivery Health Assessment
+3. Timeline Risks
+4. Recommended Actions
+
+Project Context:
 
 {context}
 """
 
 
-RISK_PROMPT = """
-You are a PMO risk specialist.
+RISK_ANALYSIS_PROMPT = """
+You are a PMO Risk Management Specialist.
 
-Analyze the project risks and provide:
+Analyze the risk register below.
 
-1. Risk summary
-2. Critical risks
-3. Recommended mitigations
+Provide:
 
-Risk Data:
+1. Risk Summary
+2. Critical Risks
+3. Business Impact
+4. Recommended Mitigations
+
+Risk Context:
 
 {context}
 """
 
 
 COMMUNICATION_PROMPT = """
-You are an executive communications advisor.
+You are an Executive Communications Advisor.
 
-Create a leadership-ready update.
+Using the information below, draft a concise leadership update.
 
-Data:
+Include:
+
+1. Current Status
+2. Key Risks
+3. Mitigation Activities
+4. Leadership Ask
+
+Context:
 
 {context}
 """
