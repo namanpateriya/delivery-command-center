@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 
-from pydantic import BaseModel
+from app.schemas import (
+    QueryRequest
+)
 
 from app.orchestrator.service import (
     DeliveryCommandCenter
@@ -11,13 +13,6 @@ app = FastAPI(
     title="Delivery Command Center",
     version="1.0.0"
 )
-
-
-class QueryRequest(
-    BaseModel
-):
-
-    query: str
 
 
 @app.get("/")
