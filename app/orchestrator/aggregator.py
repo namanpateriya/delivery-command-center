@@ -1,60 +1,70 @@
-class ResultAggregator:
+from app.llm.reasoning_engine import (
+    ReasoningEngine
+)
 
-    def aggregate(
+from app.utils.logger import (
+    get_logger
+)
+
+logger = get_logger(__name__)
+
+
+class CommunicationAgent:
+
+    name = "CommunicationAgent"
+
+    async def execute(
         self,
-        plan,
-        results
+        client
     ):
 
-        output = {
+        try:
 
-            "summary": "",
-
-            "risks": [],
-
-            "recommended_actions": [],
-
-            "communication_draft": ""
-        }
-
-        for task, result in zip(
-            plan,
-            results
-        ):
-
-            if task == "delivery":
-
-                output[
-                    "summary"
-                ] = result
-
-            elif task == "risk":
-
-                output[
-                    "risks"
-                ].append(
-                    result
+            stakeholders = (
+                await client.read_resource(
+                    "stakeholder://contacts"
                 )
+            )
 
-                output[
-                    "recommended_actions"
-                ].append(
-                    (
-                        "Review open "
-                        "project risks."
-                    )
+            draft = (
+                await client.call_tool(
+                    "draft_status_update"
                 )
+            )
 
-            elif task == (
-                "communication"
-            ):
+            engine = (
+                ReasoningEngine()
+            )
 
-                output[
-                    "communication_draft"
-                ] = result
+            analysis = (
+                await engine.generate_communication(
+                    {
+                        "stakeholders":
+                        stakeholders,
 
-        return {
+                        "draft":
+                        draft
+                    }
+                )
+            )
 
-            "executive_summary":
-            output
-        }
+            return {
+
+                "success": True,
+
+                "analysis":
+                analysis
+            }
+
+        except Exception as e:
+
+            logger.exception(
+                "Communication agent failed"
+            )
+
+            return {
+
+                "success": False,
+
+                "error": str(e)
+            }
