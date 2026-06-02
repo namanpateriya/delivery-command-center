@@ -1,5 +1,9 @@
 import asyncio
 
+from app.config import (
+    ENABLE_MCP
+)
+
 from app.mcp.client import (
     DeliveryMCPClient
 )
@@ -57,11 +61,32 @@ class DeliveryCommandCenter:
             )
         )
 
-        client = (
-            DeliveryMCPClient()
-        )
+        client = None
 
-        await client.connect()
+        if ENABLE_MCP:
+
+            client = (
+                DeliveryMCPClient()
+            )
+
+            try:
+
+                await client.connect()
+
+                logger.info(
+                    "MCP connection established"
+                )
+
+            except Exception:
+
+                logger.exception(
+                    (
+                        "MCP unavailable. "
+                        "Using fallback mode."
+                    )
+                )
+
+                client = None
 
         try:
 
@@ -97,4 +122,6 @@ class DeliveryCommandCenter:
 
         finally:
 
-            await client.close()
+            if client:
+
+                await client.close()
