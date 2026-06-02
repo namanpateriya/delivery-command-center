@@ -112,3 +112,15 @@ STAKEHOLDER_DATA_FILE = os.getenv(
     "STAKEHOLDER_DATA_FILE",
     "examples/sample_stakeholders.json"
 )
+
+# ==========================
+# MCP Configuration
+# ==========================
+
+ENABLE_MCP = (
+    os.getenv(
+        "ENABLE_MCP",
+        "true"
+    ).lower()
+    == "true"
+)
