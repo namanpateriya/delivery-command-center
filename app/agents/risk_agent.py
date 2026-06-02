@@ -12,15 +12,35 @@ class RiskAgent:
         client: DeliveryMCPClient
     ):
 
-        risks = await client.read_resource(
-            "risk://open"
-        )
+        try:
 
-        assessment = await client.call_tool(
-            "assess_project_risk"
-        )
+            risks = (
+                await client.read_resource(
+                    "risk://open"
+                )
+            )
 
-        return {
-            "risks": risks,
-            "risk_assessment": assessment
-        }
+            assessment = (
+                await client.call_tool(
+                    "assess_project_risk"
+                )
+            )
+
+            return {
+
+                "success": True,
+
+                "risks": risks,
+
+                "risk_assessment":
+                assessment
+            }
+
+        except Exception as e:
+
+            return {
+
+                "success": False,
+
+                "error": str(e)
+            }
