@@ -9,31 +9,42 @@ class WorkflowPlanner:
 
         query = user_query.lower()
 
-        if (
-            "project" in query
-            or "status" in query
-            or "delivery" in query
-            or "timeline" in query
+        if any(
+            keyword in query
+            for keyword in [
+                "project",
+                "status",
+                "delivery",
+                "timeline"
+            ]
         ):
             plan.append(
                 "delivery"
             )
 
-        if (
-            "risk" in query
-            or "delay" in query
-            or "blocked" in query
-            or "issue" in query
+        if any(
+            keyword in query
+            for keyword in [
+                "risk",
+                "delay",
+                "blocked",
+                "issue"
+            ]
         ):
             plan.append(
                 "risk"
             )
 
-        if (
-            "leadership" in query
-            or "stakeholder" in query
-            or "communication" in query
-            or "update" in query
+        if any(
+            keyword in query
+            for keyword in [
+                "leadership",
+                "executive",
+                "sponsor",
+                "stakeholder",
+                "communication",
+                "update"
+            ]
         ):
             plan.append(
                 "communication"
@@ -41,7 +52,7 @@ class WorkflowPlanner:
 
         if not plan:
 
-            plan = [
+            return [
                 "delivery",
                 "risk",
                 "communication"
