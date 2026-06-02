@@ -1,18 +1,26 @@
 # References
 
-## MCP Resources
+## MCP
 
 ### Model Context Protocol
 
 https://modelcontextprotocol.io
 
-### MCP GitHub Organization
-
-https://github.com/modelcontextprotocol
-
-### Python SDK
+### MCP Python SDK
 
 https://github.com/modelcontextprotocol/python-sdk
+
+---
+
+# LLM Providers
+
+## Google Gemini
+
+https://ai.google.dev
+
+## OpenAI
+
+https://platform.openai.com/docs
 
 ---
 
@@ -22,27 +30,25 @@ https://github.com/modelcontextprotocol/python-sdk
 
 Standardized access to resources and tools.
 
----
-
 ## Multi-Agent Systems
 
 Specialized agents collaborating toward a shared objective.
-
----
 
 ## Workflow Orchestration
 
 Planner, Router, and Aggregator patterns.
 
----
+## Provider Abstraction
+
+Switching between LLM providers without changing business logic.
 
 ## Executive Reporting
 
-Structured synthesis of delivery, risk, and communication information.
+Generating structured leadership-ready outputs.
 
 ---
 
-# Recommended Reading Order
+# Recommended Learning Path
 
 1. README.md
 2. ARCHITECTURE.md
@@ -51,18 +57,19 @@ Structured synthesis of delivery, risk, and communication information.
 
 ---
 
-# Related Topics
+# Suggested Next Topics
 
-After this repository, explore:
+After this repository:
 
-* MCP + RAG
-* MCP + Memory
-* MCP + Gemini
-* Agent Observability
-* Enterprise Workflow Automation
+- MCP + RAG
+- MCP + Memory
+- MCP + Tool Calling
+- Agent Observability
+- Multi-Agent Coordination
+- Enterprise AI Platforms
 
 ---
 
 # Key Takeaways
 
-This repository demonstrates how MCP can be used as a discoverable integration layer inside a multi-agent workflow designed for program and delivery management scenarios.
+This repository demonstrates how MCP, AI agents, workflow orchestration, and provider abstraction can be combined into a practical enterprise delivery intelligence platform.
