@@ -5,88 +5,88 @@ class WorkflowOptimizer:
         result: dict
     ):
 
-        recommendations = []
-
         summary = result.get(
             "executive_summary",
             {}
         )
 
-        # --------------------
-        # Delivery Coverage
-        # --------------------
+        coverage_score = 0
 
-        if (
-            "delivery"
-            not in summary
+        recommendations = []
+
+        if summary.get(
+            "summary"
         ):
+
+            coverage_score += 25
+
+        else:
 
             recommendations.append(
                 (
-                    "Delivery analysis is "
-                    "missing."
+                    "Delivery summary "
+                    "is missing."
                 )
             )
 
-        # --------------------
-        # Risk Coverage
-        # --------------------
-
-        if (
-            "risk"
-            not in summary
+        if summary.get(
+            "risks"
         ):
+
+            coverage_score += 25
+
+        else:
 
             recommendations.append(
                 (
-                    "Risk assessment is "
-                    "missing."
+                    "Risk assessment "
+                    "is missing."
                 )
             )
 
-        # --------------------
-        # Communication Coverage
-        # --------------------
-
-        if (
-            "communication"
-            not in summary
+        if summary.get(
+            "communication_draft"
         ):
+
+            coverage_score += 25
+
+        else:
 
             recommendations.append(
                 (
-                    "Stakeholder "
-                    "communication "
-                    "draft is missing."
+                    "Communication draft "
+                    "is missing."
                 )
             )
 
-        # --------------------
-        # Executive Readiness
-        # --------------------
+        if summary.get(
+            "recommended_actions"
+        ):
 
-        readiness_score = 100
+            coverage_score += 25
 
-        readiness_score -= (
-            len(
-                recommendations
-            ) * 20
+        else:
+
+            recommendations.append(
+                (
+                    "Recommended actions "
+                    "are missing."
+                )
+            )
+
+        governance_score = (
+            coverage_score
         )
 
-        readiness_score = max(
-            readiness_score,
-            0
+        readiness_score = (
+            coverage_score
         )
-
-        # --------------------
-        # Governance Assessment
-        # --------------------
 
         governance_status = (
             "Healthy"
         )
 
-        if readiness_score < 80:
+        if readiness_score < 75:
 
             governance_status = (
                 "Needs Review"
@@ -98,38 +98,19 @@ class WorkflowOptimizer:
                 "High Risk"
             )
 
-        # --------------------
-        # Coverage Metrics
-        # --------------------
-
-        coverage = {
-
-            "delivery": (
-                "delivery"
-                in summary
-            ),
-
-            "risk": (
-                "risk"
-                in summary
-            ),
-
-            "communication": (
-                "communication"
-                in summary
-            )
-        }
-
         return {
+
+            "coverage_score":
+            coverage_score,
+
+            "governance_score":
+            governance_score,
 
             "readiness_score":
             readiness_score,
 
             "governance_status":
             governance_status,
-
-            "coverage":
-            coverage,
 
             "recommendations":
             recommendations
