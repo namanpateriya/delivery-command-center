@@ -47,3 +47,9 @@ class WorkflowResponse(BaseModel):
     status: str
 
     report: ExecutiveReport
+
+class QueryRequest(
+    BaseModel
+):
+
+    query: str
