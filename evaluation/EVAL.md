@@ -2,9 +2,9 @@
 
 ## Purpose
 
-The evaluation framework validates whether the Delivery Command Center successfully produces executive-ready outputs across delivery, risk, and communication dimensions.
+The evaluation framework validates workflow quality and governance readiness.
 
-Unlike model-centric evaluations, the focus is on workflow quality and governance readiness.
+Unlike model-centric benchmarks, the focus is on business outcomes.
 
 ---
 
@@ -12,45 +12,40 @@ Unlike model-centric evaluations, the focus is on workflow quality and governanc
 
 ## Workflow Execution
 
-Verifies that the complete workflow executes successfully.
+Verifies that the workflow executes successfully.
 
----
+## Delivery Analysis
 
-## Delivery Coverage
+Verifies delivery insights are generated.
 
-Verifies that delivery insights are present.
+## Risk Analysis
 
----
+Verifies risk assessments are produced.
 
-## Risk Coverage
+## Stakeholder Communication
 
-Verifies that risk analysis is present.
-
----
-
-## Communication Coverage
-
-Verifies that stakeholder communication outputs are present.
-
----
+Verifies leadership updates are generated.
 
 ## Governance Readiness
 
-Assesses whether the generated output is suitable for executive review.
+Assesses suitability for executive review.
+
+## Agent Participation
+
+Measures contribution across agents.
 
 ---
 
-# Optimization Framework
+# Optimization Metrics
 
-The optimizer analyzes workflow outputs and generates recommendations.
+The optimizer produces:
 
-Evaluation areas include:
-
-* delivery completeness
-* risk visibility
-* communication readiness
-* governance readiness
-* executive reporting coverage
+- delivery_score
+- risk_score
+- communication_score
+- governance_score
+- readiness_score
+- agent_participation_score
 
 ---
 
@@ -66,24 +61,26 @@ python -m evaluation.evaluator
 
 A successful execution should:
 
-* complete the workflow
-* generate all required sections
-* achieve acceptable readiness scores
-* avoid governance gaps
+- Generate an executive summary
+- Produce delivery analysis
+- Produce risk analysis
+- Produce stakeholder communication
+- Meet governance thresholds
 
 ---
 
-# Future Improvements
+# Future Enhancements
 
-Potential enhancements include:
+Potential improvements:
 
-* automated benchmark datasets
-* agent performance metrics
-* workflow latency tracking
-* MCP interaction monitoring
+- Benchmark datasets
+- Prompt evaluation
+- LLM quality scoring
+- Cost tracking
+- Latency analysis
 
 ---
 
 # Summary
 
-The evaluation framework provides structured validation of workflow quality and helps identify areas for improvement before outputs are shared with stakeholders.
+The framework helps validate workflow quality before outputs are shared with stakeholders.
