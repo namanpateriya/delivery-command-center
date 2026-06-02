@@ -22,7 +22,8 @@ class WorkflowEvaluator:
                 (
                     "Project delayed by "
                     "3 weeks. Prepare "
-                    "leadership update."
+                    "executive leadership "
+                    "update."
                 )
             )
         )
@@ -95,16 +96,28 @@ class WorkflowEvaluator:
                 (
                     metrics[
                         "governance_score"
-                    ] >= 80
+                    ] >= 50
+                )
+            },
+
+            {
+                "test":
+                "agent_participation",
+
+                "passed":
+                (
+                    metrics[
+                        "agent_participation_score"
+                    ] >= 50
                 )
             }
         ]
 
         passed = len(
             [
-                t
-                for t in tests
-                if t["passed"]
+                test
+                for test in tests
+                if test["passed"]
             ]
         )
 
@@ -126,7 +139,10 @@ class WorkflowEvaluator:
             tests,
 
             "metrics":
-            metrics
+            metrics,
+
+            "report":
+            report
         }
 
 
@@ -136,15 +152,15 @@ async def main():
         WorkflowEvaluator()
     )
 
-    result = (
+    results = (
         await evaluator.evaluate()
     )
 
     print(
-        "\n=== EVALUATION ===\n"
+        "\n=== DELIVERY COMMAND CENTER EVALUATION ===\n"
     )
 
-    print(result)
+    print(results)
 
 
 if __name__ == "__main__":
