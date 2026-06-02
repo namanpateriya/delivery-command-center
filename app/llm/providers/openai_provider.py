@@ -10,6 +10,12 @@ class OpenAIProvider:
 
     def __init__(self):
 
+        if not OPENAI_API_KEY:
+
+            raise ValueError(
+                "OPENAI_API_KEY not configured."
+            )
+
         self.client = OpenAI(
             api_key=OPENAI_API_KEY
         )
@@ -19,11 +25,33 @@ class OpenAIProvider:
         prompt: str
     ):
 
-        response = (
-            self.client.responses.create(
-                model=OPENAI_MODEL,
-                input=prompt
-            )
-        )
+        try:
 
-        return response.output_text
+            response = (
+                self.client.responses.create(
+                    model=OPENAI_MODEL,
+                    input=prompt
+                )
+            )
+
+            return {
+
+                "provider": "openai",
+
+                "content": getattr(
+                    response,
+                    "output_text",
+                    ""
+                )
+            }
+
+        except Exception as e:
+
+            return {
+
+                "provider": "openai",
+
+                "error": str(e),
+
+                "content": ""
+            }
