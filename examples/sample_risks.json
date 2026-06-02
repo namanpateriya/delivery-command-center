@@ -1,0 +1,20 @@
+[
+  {
+    "risk_id": "R1",
+    "severity": "High",
+    "description": "Vendor dependency delays impacting critical path.",
+    "mitigation": "Weekly escalation with vendor leadership."
+  },
+  {
+    "risk_id": "R2",
+    "severity": "Medium",
+    "description": "Resource bandwidth constraints.",
+    "mitigation": "Reallocate resources from lower priority initiatives."
+  },
+  {
+    "risk_id": "R3",
+    "severity": "Low",
+    "description": "Minor testing environment instability.",
+    "mitigation": "Environment refresh scheduled."
+  }
+]
